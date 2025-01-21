@@ -15,7 +15,7 @@
       classname="com.exe4j.Exe4JTask"
       classpath="${exe4j_ant_jar}"/>
 
-  <target name="Build_32-64" depends="artifact.fmlinstaller:jar">
+  <target name="Build_32-64" depends="artifact.fmlinstaller:jar" description="Build the installer for both x32 and x64 arch">
     <exe4j projectfile="FML_Installerx32.exe4j"/>
     <exe4j projectfile="FML_Installerx64.exe4j"/>
   </target>
