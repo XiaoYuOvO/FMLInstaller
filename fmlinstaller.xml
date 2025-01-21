@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="fmlinstaller" default="all">
+  
+  
+  <property file="fmlinstaller.properties"/>
+  <property file="src/version.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+
+  <taskdef name="exe4j"
+      classname="com.exe4j.Exe4JTask"
+      classpath="${exe4j_ant_jar}"/>
+
+  <target name="Build_32-64" depends="artifact.fmlinstaller:jar">
+    <exe4j projectfile="FML_Installerx32.exe4j"/>
+    <exe4j projectfile="FML_Installerx64.exe4j"/>
+  </target>
+
+  <target name="Build_64" depends="artifact.fmlinstaller:jar">
+    <exe4j projectfile="FML_Installerx64.exe4j" destination="FishModLoader-${version}-Installer-x64.exe"/>
+  </target>
+
+  <target name="Build_32" depends="artifact.fmlinstaller:jar">
+    <exe4j projectfile="FML_Installerx32.exe4j" destination="FishModLoader-${version}-Installer-x32.exe"/>
+  </target>
+
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.egg"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+    <include name="*.klib"/>
+    <include name="*.swc"/>
+    <include name="*.war"/>
+    <include name="*.ane"/>
+    <include name="*.zip"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/ext/access-bridge-64.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/jfxrt.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunmscapi.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/sa-jdi.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.gson-2.2.2.classpath">
+    <pathelement location="${basedir}/libs/gson-2.2.2.jar"/>
+  </path>
+  
+  
+  <!-- Global Libraries -->
+  
+  
+  <!-- Application Server Libraries -->
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module FMLInstaller -->
+  
+  <dirname property="module.fmlinstaller.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.fmlinstaller" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.fmlinstaller" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.fmlinstaller" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.fmlinstaller" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="fmlinstaller.output.dir" value="${module.fmlinstaller.basedir}/out/production/FMLInstaller"/>
+  <property name="fmlinstaller.testoutput.dir" value="${module.fmlinstaller.basedir}/out/test/FMLInstaller"/>
+  
+  <path id="fmlinstaller.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="fmlinstaller.module.production.classpath">
+    <path refid="${module.jdk.classpath.fmlinstaller}"/>
+    <path refid="library.gson-2.2.2.classpath"/>
+  </path>
+  
+  <path id="fmlinstaller.runtime.production.module.classpath">
+    <pathelement location="${fmlinstaller.output.dir}"/>
+    <path refid="library.gson-2.2.2.classpath"/>
+  </path>
+  
+  <path id="fmlinstaller.module.classpath">
+    <path refid="${module.jdk.classpath.fmlinstaller}"/>
+    <pathelement location="${fmlinstaller.output.dir}"/>
+    <path refid="library.gson-2.2.2.classpath"/>
+  </path>
+  
+  <path id="fmlinstaller.runtime.module.classpath">
+    <pathelement location="${fmlinstaller.testoutput.dir}"/>
+    <pathelement location="${fmlinstaller.output.dir}"/>
+    <path refid="library.gson-2.2.2.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.fmlinstaller">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.fmlinstaller">
+    <patternset refid="excluded.from.module.fmlinstaller"/>
+  </patternset>
+  
+  <path id="fmlinstaller.module.sourcepath">
+    <dirset dir="${module.fmlinstaller.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.fmlinstaller" depends="compile.module.fmlinstaller.production,compile.module.fmlinstaller.tests" description="Compile module FMLInstaller"/>
+  
+  <target name="compile.module.fmlinstaller.production" description="Compile module FMLInstaller; production classes">
+    <mkdir dir="${fmlinstaller.output.dir}"/>
+    <javac destdir="${fmlinstaller.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.fmlinstaller}/javac">
+      <compilerarg line="${compiler.args.fmlinstaller}"/>
+      <bootclasspath refid="fmlinstaller.module.bootclasspath"/>
+      <classpath refid="fmlinstaller.module.production.classpath"/>
+      <src refid="fmlinstaller.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.fmlinstaller"/>
+    </javac>
+    
+    <copy todir="${fmlinstaller.output.dir}">
+      <fileset dir="${module.fmlinstaller.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.fmlinstaller.tests" depends="compile.module.fmlinstaller.production" description="compile module FMLInstaller; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.fmlinstaller" description="cleanup module">
+    <delete dir="${fmlinstaller.output.dir}"/>
+    <delete dir="${fmlinstaller.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.fmlinstaller" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.fmlinstaller" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.fmlinstaller:jar" value="${basedir}/out/artifacts/FMLInstaller_jar"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.FMLInstaller.jar" value="${artifacts.temp.dir}/FMLInstaller.jar"/>
+  </target>
+  
+  <target name="artifact.fmlinstaller:jar" depends="init.artifacts, compile.module.fmlinstaller" description="Build &#39;FMLInstaller:jar&#39; artifact">
+    <property name="artifact.temp.output.fmlinstaller:jar" value="${artifacts.temp.dir}/FMLInstaller_jar"/>
+    <mkdir dir="${artifact.temp.output.fmlinstaller:jar}"/>
+    <jar destfile="${temp.jar.path.FMLInstaller.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${fmlinstaller.output.dir}"/>
+      <zipfileset src="${basedir}/libs/gson-2.2.2.jar"/>
+    </jar>
+    <copy file="${temp.jar.path.FMLInstaller.jar}" tofile="${artifact.temp.output.fmlinstaller:jar}/FMLInstaller.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.fmlinstaller:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.fmlinstaller:jar}"/>
+    <copy todir="${artifact.output.fmlinstaller:jar}">
+      <fileset dir="${artifact.temp.output.fmlinstaller:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
